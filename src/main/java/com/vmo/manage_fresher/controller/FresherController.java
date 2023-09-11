@@ -3,6 +3,7 @@ package com.vmo.manage_fresher.controller;
 import com.vmo.manage_fresher.entity.Center;
 import com.vmo.manage_fresher.entity.Fresher;
 import com.vmo.manage_fresher.exception.FresherNotFoundException;
+import com.vmo.manage_fresher.model.NumberOfFresherEachCenter;
 import com.vmo.manage_fresher.service.CenterService;
 import com.vmo.manage_fresher.service.FresherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -117,14 +119,17 @@ public class FresherController {
         return ResponseEntity.ok(fresherList);
     }
 
-//    @GetMapping("/freshers/statisticFresherByCenter")
-//    public ResponseEntity<?> statisticFresherByCenter(@RequestParam Integer pageNumber,
-//                                                      @RequestParam Integer pageSize) {
-//        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
-//        List<Center> centers = centerService.findAll(pageable);
-//        for (Center center: centers) {
-//            int numberOfFreshers = fresherService.countFresherByCenterId(center.getId());
-//
-//        }
-//    }
+    @GetMapping("/freshers/statisticFresherByCenter")
+    public ResponseEntity<?> statisticFresherByCenter(@RequestParam Integer pageNumber,
+                                                      @RequestParam Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        List<Center> centers = centerService.findAll(pageable);
+        List<NumberOfFresherEachCenter> result = new ArrayList<>();
+        for (Center center: centers) {
+            Integer numberOfFresher = fresherService.countFresherByCenterId(center.getId());
+            System.out.println(numberOfFresher);
+            result.add(new NumberOfFresherEachCenter(center.getId(), center.getName(), numberOfFresher));
+        }
+        return ResponseEntity.ok("ok");
+    }
 }

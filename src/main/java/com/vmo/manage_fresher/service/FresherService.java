@@ -21,4 +21,6 @@ public interface FresherService {
     List<Fresher> findByProgrammingLanguage(String programmingLanguage, Pageable pageable);
 
     List<Fresher> findByEmail(String email, Pageable pageable);
+
+    int countFresherByCenterId(Integer id);
 }

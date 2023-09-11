@@ -76,4 +76,10 @@ public class FresherServiceImpl implements FresherService {
     public List<Fresher> findByEmail(String email, Pageable pageable) {
         return fresherRepository.findByEmail(email, pageable);
     }
+
+    @Override
+    @Transactional
+    public int countFresherByCenterId(Integer id) {
+        return fresherRepository.countFresherByCenterId(id);
+    }
 }
