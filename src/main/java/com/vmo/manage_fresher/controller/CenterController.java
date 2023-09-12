@@ -27,7 +27,7 @@ public class CenterController {
     }
 
     @GetMapping("/centers")
-    public ResponseEntity<?> findAllCenters(@RequestParam Integer pageNumber,
+    public ResponseEntity<List<Center>> findAllCenters(@RequestParam Integer pageNumber,
                                             @RequestParam Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Center> centerList = centerService.findAll(pageable);
@@ -35,7 +35,7 @@ public class CenterController {
     }
 
     @PostMapping("/centers")
-    public ResponseEntity<?> addCenter(@RequestBody Center center) {
+    public ResponseEntity<Center> addCenter(@RequestBody Center center) {
         Center savedCenter = centerService.save(new Center(center.getName(), center.getAddress()));
         return ResponseEntity.ok(savedCenter);
     }

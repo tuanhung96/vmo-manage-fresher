@@ -1,8 +1,10 @@
 package com.vmo.manage_fresher.service;
 
 import com.vmo.manage_fresher.dao.FresherRepository;
+import com.vmo.manage_fresher.dao.YourRepository;
 import com.vmo.manage_fresher.entity.Fresher;
 import com.vmo.manage_fresher.exception.FresherNotFoundException;
+import com.vmo.manage_fresher.model.NumberOfFresherEachScoreRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,16 +17,23 @@ import java.util.Optional;
 public class FresherServiceImpl implements FresherService {
 
     private FresherRepository fresherRepository;
+    private YourRepository yourRepository;
 
     @Autowired
-    public FresherServiceImpl(FresherRepository fresherRepository) {
+    public FresherServiceImpl(FresherRepository fresherRepository, YourRepository yourRepository) {
         this.fresherRepository = fresherRepository;
+        this.yourRepository = yourRepository;
     }
 
     @Override
     @Transactional
     public List<Fresher> findAll(Pageable pageable) {
         return fresherRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public List<Fresher> findAll() {
+        return fresherRepository.findAll();
     }
 
     @Override
@@ -82,4 +91,11 @@ public class FresherServiceImpl implements FresherService {
     public int countFresherByCenterId(Integer id) {
         return fresherRepository.countFresherByCenterId(id);
     }
+
+    @Override
+    @Transactional
+    public List<NumberOfFresherEachScoreRange> getNumberOfFresherEachScoreRange() {
+        return yourRepository.getNumberOfFresherEachScoreRange();
+    }
+
 }

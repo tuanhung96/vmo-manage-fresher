@@ -1,12 +1,14 @@
 package com.vmo.manage_fresher.service;
 
 import com.vmo.manage_fresher.entity.Fresher;
+import com.vmo.manage_fresher.model.NumberOfFresherEachScoreRange;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface FresherService {
     List<Fresher> findAll(Pageable pageable);
+    List<Fresher> findAll();
 
     Fresher findById(Integer fresherId);
 
@@ -23,4 +25,6 @@ public interface FresherService {
     List<Fresher> findByEmail(String email, Pageable pageable);
 
     int countFresherByCenterId(Integer id);
+
+    List<NumberOfFresherEachScoreRange> getNumberOfFresherEachScoreRange();
 }
