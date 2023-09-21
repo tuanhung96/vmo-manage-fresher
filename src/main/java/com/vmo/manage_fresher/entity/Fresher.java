@@ -1,6 +1,7 @@
 package com.vmo.manage_fresher.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "fresher")
@@ -10,21 +11,29 @@ public class Fresher {
     @Column(name = "id")
     private Integer id;
 
+    @NotBlank(message = "name must not be blank")
     @Column(name = "name")
     private String name;
 
+    @Pattern(regexp = "[A-Za-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}", message = "email is invalid")
     @Column(name = "email")
     private String email;
 
     @Column(name = "programming_language")
     private String programmingLanguage;
 
+    @Min(value=0, message = "Score must be greater than or equal to zero")
+    @Max(value=10, message = "Score must be less than or equal to ten")
     @Column(name = "score_1")
     private Float score_1;
 
+    @Min(value=0, message = "Score must be greater than or equal to zero")
+    @Max(value=10, message = "Score must be less than or equal to ten")
     @Column(name = "score_2")
     private Float score_2;
 
+    @Min(value=0, message = "Score must be greater than or equal to zero")
+    @Max(value=10, message = "Score must be less than or equal to ten")
     @Column(name = "score_3")
     private Float score_3;
 

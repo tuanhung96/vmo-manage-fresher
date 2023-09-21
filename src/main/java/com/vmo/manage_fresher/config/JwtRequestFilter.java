@@ -1,5 +1,6 @@
 package com.vmo.manage_fresher.config;
 
+import com.vmo.manage_fresher.exception.JwtExpiredException;
 import com.vmo.manage_fresher.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 //                throw new UnableToGetJWTException("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
-//                throw new JwtExpiredException("JWT Token has expired");
+                throw new JwtExpiredException("JWT Token has expired. Please get new access token by refresh token");
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
