@@ -19,7 +19,7 @@ public class JwtTokenUtil {
     @Value("${app.jwtSecret}")
     private String JWT_SECRET;
 
-    public static final long JWT_TOKEN_DURATION = 1 * 60 * 1000;   // 1 minute
+    public static final long JWT_TOKEN_DURATION = 30 * 60 * 1000;   // 1 minute
 
     //generate token for user
     public String generateToken(UserDetails userDetails) {

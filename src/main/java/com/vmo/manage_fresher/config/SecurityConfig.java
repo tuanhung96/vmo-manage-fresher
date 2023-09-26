@@ -51,10 +51,13 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer ->
                         configurer
+//                                .antMatchers("/**").permitAll()
                                 .antMatchers("/hello").permitAll()
                                 .antMatchers("/authenticate").permitAll()
                                 .antMatchers("/refreshToken").permitAll()
-                                .antMatchers("/swagger-ui").permitAll()
+                                .antMatchers("/swagger-ui", "/swagger-ui/**").permitAll()
+                                .antMatchers("/swagger-resources", "/swagger-resources/**").permitAll()
+                                .antMatchers("/v2/api-docs").permitAll()
 //                                .requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
                                 .anyRequest().authenticated()
                 )
