@@ -1,10 +1,11 @@
-package com.vmo.manage_fresher.service;
+package com.vmo.manage_fresher.service.impl;
 
 import com.vmo.manage_fresher.dao.FresherRepository;
 import com.vmo.manage_fresher.dao.YourRepository;
 import com.vmo.manage_fresher.entity.Fresher;
 import com.vmo.manage_fresher.exception.FresherNotFoundException;
-import com.vmo.manage_fresher.model.NumberOfFresherEachScoreRange;
+import com.vmo.manage_fresher.model.response.NumberOfFresherEachScoreRange;
+import com.vmo.manage_fresher.service.FresherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class FresherServiceImpl implements FresherService {
     }
 
     @Override
+    @Transactional
     public List<Fresher> findAll() {
         return fresherRepository.findAll();
     }

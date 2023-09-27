@@ -1,4 +1,4 @@
-package com.vmo.manage_fresher.model;
+package com.vmo.manage_fresher.model.response;
 
 public class NumberOfFresherByScore {
     private String scoreRange;

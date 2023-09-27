@@ -3,8 +3,8 @@ package com.vmo.manage_fresher.controller;
 import com.vmo.manage_fresher.entity.Center;
 import com.vmo.manage_fresher.entity.Fresher;
 import com.vmo.manage_fresher.exception.FresherNotFoundException;
-import com.vmo.manage_fresher.model.NumberOfFresherEachCenter;
-import com.vmo.manage_fresher.model.NumberOfFresherEachScoreRange;
+import com.vmo.manage_fresher.model.response.NumberOfFresherEachCenter;
+import com.vmo.manage_fresher.model.response.NumberOfFresherEachScoreRange;
 import com.vmo.manage_fresher.service.CenterService;
 import com.vmo.manage_fresher.service.FresherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class FresherController {
     }
 
     @DeleteMapping("/freshers/{fresherId}")
-    public ResponseEntity<?> deleteFresher(@PathVariable Integer fresherId) {
+    public ResponseEntity<String> deleteFresher(@PathVariable Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
         if(fresher == null) {
             throw new FresherNotFoundException("Did not find fresher id - " + fresherId);

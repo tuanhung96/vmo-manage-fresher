@@ -13,4 +13,6 @@ public interface CenterService {
     Center findById(Integer centerId);
 
     void deleteById(Integer centerId);
+
+    void saveAll(List<Center> centerList);
 }

@@ -1,4 +1,4 @@
-package com.vmo.manage_fresher.model;
+package com.vmo.manage_fresher.model.request;
 
 public class AuthenticationRequest {
     private String email;

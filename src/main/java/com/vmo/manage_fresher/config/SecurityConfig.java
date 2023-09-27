@@ -12,7 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -66,14 +67,14 @@ public class SecurityConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                                 .maximumSessions(1)
                                 .maxSessionsPreventsLogin(false)     // second login will cause the first to be invalidated
+                )
+                .exceptionHandling(exception ->
+                        exception
+                                .authenticationEntryPoint((request, response, e) -> {
+                                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
+                                }
+                        )
                 );
-//                .exceptionHandling(exception ->
-//                        exception
-//                                .authenticationEntryPoint((request, response, e) -> {
-//                                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage());
-//                                }
-//                        )
-//                );
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

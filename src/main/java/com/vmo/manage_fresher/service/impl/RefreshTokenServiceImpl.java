@@ -1,11 +1,10 @@
-package com.vmo.manage_fresher.service;
+package com.vmo.manage_fresher.service.impl;
 
 import com.vmo.manage_fresher.dao.RefreshTokenRepository;
 import com.vmo.manage_fresher.dao.UserRepository;
-import com.vmo.manage_fresher.entity.Fresher;
 import com.vmo.manage_fresher.entity.RefreshToken;
-import com.vmo.manage_fresher.exception.FresherNotFoundException;
 import com.vmo.manage_fresher.exception.TokenRefreshException;
+import com.vmo.manage_fresher.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RefreshTokenServiceImpl implements RefreshTokenService{
+public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Value("${app.jwtRefreshExpirationMs}")
     private Long refreshTokenExpirationMs;
     private RefreshTokenRepository refreshTokenRepository;

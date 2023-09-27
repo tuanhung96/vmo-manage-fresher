@@ -1,7 +1,8 @@
-package com.vmo.manage_fresher.service;
+package com.vmo.manage_fresher.service.impl;
 
 import com.vmo.manage_fresher.dao.UserRepository;
 import com.vmo.manage_fresher.entity.User;
+import com.vmo.manage_fresher.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired

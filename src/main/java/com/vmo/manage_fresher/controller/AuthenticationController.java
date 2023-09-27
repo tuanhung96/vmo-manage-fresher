@@ -6,9 +6,9 @@ import com.vmo.manage_fresher.entity.User;
 import com.vmo.manage_fresher.exception.InvalidUserException;
 import com.vmo.manage_fresher.exception.TokenRefreshException;
 import com.vmo.manage_fresher.exception.UserDisabledException;
-import com.vmo.manage_fresher.model.AuthenticationRequest;
-import com.vmo.manage_fresher.model.AuthenticationResponse;
-import com.vmo.manage_fresher.model.TokenRefreshRequest;
+import com.vmo.manage_fresher.model.request.AuthenticationRequest;
+import com.vmo.manage_fresher.model.response.AuthenticationResponse;
+import com.vmo.manage_fresher.model.request.TokenRefreshRequest;
 import com.vmo.manage_fresher.service.RefreshTokenService;
 import com.vmo.manage_fresher.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
 
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
@@ -73,7 +73,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest request) {
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
 
         RefreshToken refreshToken = refreshTokenService.findByToken(requestRefreshToken);

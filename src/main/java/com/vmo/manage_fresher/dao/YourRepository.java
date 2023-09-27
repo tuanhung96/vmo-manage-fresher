@@ -1,6 +1,6 @@
 package com.vmo.manage_fresher.dao;
 
-import com.vmo.manage_fresher.model.NumberOfFresherEachScoreRange;
+import com.vmo.manage_fresher.model.response.NumberOfFresherEachScoreRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

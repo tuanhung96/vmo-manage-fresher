@@ -41,7 +41,7 @@ public class CenterController {
     }
 
     @DeleteMapping("/centers/{centerId}")
-    public ResponseEntity<?> deleteCenter(@PathVariable Integer centerId) {
+    public ResponseEntity<String> deleteCenter(@PathVariable Integer centerId) {
         Center center = centerService.findById(centerId);
         if (center == null) {
             throw new CenterNotFoundException("Did not find center id - " + centerId);
@@ -66,7 +66,7 @@ public class CenterController {
     }
 
     @GetMapping("/centers/{centerId}/addFresher/{fresherId}")
-    public ResponseEntity<?> addFresherIntoCenter(@PathVariable Integer centerId,
+    public ResponseEntity<Fresher> addFresherIntoCenter(@PathVariable Integer centerId,
                                                   @PathVariable Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
         Center center = centerService.findById(centerId);

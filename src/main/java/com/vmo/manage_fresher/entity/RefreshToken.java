@@ -21,8 +21,6 @@ public class RefreshToken {
     @Column(nullable = false)
     private Instant expiryDate;
 
-    public RefreshToken() {
-    }
 
     public Integer getId() {
         return id;
