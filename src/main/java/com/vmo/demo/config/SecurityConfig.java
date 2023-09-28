@@ -4,6 +4,7 @@ import com.vmo.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -52,13 +53,17 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer ->
                         configurer
-//                                .antMatchers("/**").permitAll()
-                                .antMatchers("/hello").permitAll()
                                 .antMatchers("/authenticate").permitAll()
                                 .antMatchers("/refreshToken").permitAll()
                                 .antMatchers("/swagger-ui", "/swagger-ui/**").permitAll()
                                 .antMatchers("/swagger-resources", "/swagger-resources/**").permitAll()
                                 .antMatchers("/v2/api-docs").permitAll()
+                                .antMatchers(HttpMethod.POST,"/centers").hasRole("ROLE_ADMIN")
+                                .antMatchers(HttpMethod.PUT,"/centers").hasRole("ROLE_ADMIN")
+                                .antMatchers(HttpMethod.DELETE,"/centers").hasRole("ROLE_ADMIN")
+                                .antMatchers(HttpMethod.POST,"/freshers").hasRole("ROLE_ADMIN")
+                                .antMatchers(HttpMethod.PUT,"/freshers").hasRole("ROLE_ADMIN")
+                                .antMatchers(HttpMethod.DELETE,"/freshers").hasRole("ROLE_ADMIN")
 //                                .requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
                                 .anyRequest().authenticated()
                 )

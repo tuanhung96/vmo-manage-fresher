@@ -8,4 +8,6 @@ public interface RefreshTokenService {
     RefreshToken findByToken(String requestRefreshToken);
 
     boolean verifyExpiration(RefreshToken refreshToken);
+
+    RefreshToken findByUserId(Integer id);
 }

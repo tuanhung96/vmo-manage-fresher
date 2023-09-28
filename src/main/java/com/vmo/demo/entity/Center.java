@@ -1,6 +1,7 @@
 package com.vmo.demo.entity;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "center")
@@ -16,12 +17,25 @@ public class Center {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "create_date")
+    private Instant createDate;
+
+    @Column(name = "update_date")
+    private Instant updateDate;
+
     public Center() {
     }
 
     public Center(String name, String address) {
         this.name = name;
         this.address = address;
+    }
+
+    public Center(String name, String address, Instant createDate, Instant updateDate) {
+        this.name = name;
+        this.address = address;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
     }
 
     public Integer getId() {
@@ -46,5 +60,21 @@ public class Center {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Instant getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Instant createDate) {
+        this.createDate = createDate;
+    }
+
+    public Instant getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Instant updateDate) {
+        this.updateDate = updateDate;
     }
 }

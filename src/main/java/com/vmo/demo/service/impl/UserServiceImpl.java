@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("Invalid email or password.");
         }
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                Arrays.asList(new SimpleGrantedAuthority("NO_ROLE")));
+                Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName())));
     }
 
     @Override

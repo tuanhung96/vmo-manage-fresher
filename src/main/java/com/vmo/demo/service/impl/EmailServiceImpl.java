@@ -47,7 +47,6 @@ public class EmailServiceImpl implements EmailService {
                 + "Score 2: " + fresher.getScore2() + ", "
                 + "Score 3: " + fresher.getScore3() + ".<br>"
                 + "Average Score: " + averageScore + ".<br>"
-//                + "<h3><a href=\""+ "\" target=\"_self\">VERIFY</a></h3>"
                 + "Thank you!<br>";
 
         MimeMessage message = mailSender.createMimeMessage();

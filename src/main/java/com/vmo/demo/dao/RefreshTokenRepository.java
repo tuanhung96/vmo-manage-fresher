@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Integer> {
     @Query("select r from RefreshToken r where r.token = ?1")
     Optional<RefreshToken> findByToken(String token);
+
+    @Query("select r from RefreshToken r where r.user.id = ?1")
+    RefreshToken findByUserId(Integer id);
 }

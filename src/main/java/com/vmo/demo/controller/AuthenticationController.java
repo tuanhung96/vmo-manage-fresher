@@ -19,7 +19,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,11 +41,6 @@ public class AuthenticationController {
         this.refreshTokenService = refreshTokenService;
     }
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello";
-    }
-
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
 
@@ -57,7 +51,11 @@ public class AuthenticationController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
+        User user = userService.findByEmail(authenticationRequest.getEmail());
+        RefreshToken refreshToken = refreshTokenService.findByUserId(user.getId());
+        if (refreshToken==null) {
+            refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
+        }
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt, refreshToken.getToken()));
     }

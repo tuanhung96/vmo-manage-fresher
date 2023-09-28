@@ -4,6 +4,7 @@ import com.vmo.demo.entity.Center;
 import com.vmo.demo.entity.Fresher;
 import com.vmo.demo.exception.FresherNotFoundException;
 import com.vmo.demo.model.dto.FresherDTO;
+import com.vmo.demo.model.response.JoinDateOfFresherWithLocalDateType;
 import com.vmo.demo.model.response.NumberOfFresherEachCenter;
 import com.vmo.demo.model.response.NumberOfFresherEachScoreRange;
 import com.vmo.demo.service.CenterService;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,6 +167,19 @@ public class FresherController {
         List<NumberOfFresherEachScoreRange> result = fresherService.getNumberOfFresherEachScoreRange();
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/freshers/{fresherId}/getJoinDateAndGraduateDate")
+    public ResponseEntity<JoinDateOfFresherWithLocalDateType> getJoinDateAndGraduateDate(@PathVariable Integer fresherId) {
+        Fresher fresher = fresherService.findById(fresherId);
+        LocalDate joinDate = fresher.getJoinDate()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate();
+
+        LocalDate graduateDate = fresher.getGraduateDate()
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate();
+        return ResponseEntity.ok(new JoinDateOfFresherWithLocalDateType(joinDate, graduateDate));
     }
 
 }

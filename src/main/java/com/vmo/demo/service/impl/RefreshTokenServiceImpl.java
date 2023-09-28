@@ -8,6 +8,7 @@ import com.vmo.demo.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -26,6 +27,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         this.userRepository = userRepository;
     }
 
+    @Override
+    @Transactional
     public RefreshToken createRefreshToken(String email) {
         RefreshToken refreshToken = new RefreshToken();
 
@@ -37,6 +40,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshToken;
     }
 
+    @Override
+    @Transactional
     public RefreshToken findByToken(String token) {
         Optional<RefreshToken> result = refreshTokenRepository.findByToken(token);
         RefreshToken refreshToken = null;
@@ -49,11 +54,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshToken;
     }
 
+    @Override
+    @Transactional
     public boolean verifyExpiration(RefreshToken refreshToken) {
         if (refreshToken.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(refreshToken);
             return false;
         }
         return true;
+    }
+
+    @Override
+    @Transactional
+    public RefreshToken findByUserId(Integer id) {
+        return refreshTokenRepository.findByUserId(id);
     }
 }
