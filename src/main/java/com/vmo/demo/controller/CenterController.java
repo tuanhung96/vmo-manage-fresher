@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -36,8 +37,11 @@ public class CenterController {
 
     @PostMapping("/centers")
     public ResponseEntity<Center> addCenter(@RequestBody CenterDTO centerDTO) {
-        Center savedCenter = centerService.save(new Center(centerDTO.getName(), centerDTO.getAddress()));
-        return ResponseEntity.ok(savedCenter);
+        Center center = new Center(centerDTO.getName(), centerDTO.getAddress());
+        Instant time = Instant.now();
+        center.setCreateDate(time);
+        center.setUpdateDate(time);
+        return ResponseEntity.ok(centerService.save(center));
     }
 
     @DeleteMapping("/centers/{centerId}")
@@ -55,11 +59,14 @@ public class CenterController {
     public ResponseEntity<Center> updateCenter(@PathVariable Integer centerId,
                                           @RequestBody CenterDTO centerDTO) {
 
-        Center foundCenter = centerService.findById(centerId);
-        if (foundCenter == null) {
+        Center center = centerService.findById(centerId);
+        if (center == null) {
             throw new CenterNotFoundException("Did not find center id - " + centerId);
         } else {
-            return ResponseEntity.ok(centerService.save(new Center(centerDTO.getName(), centerDTO.getAddress())));
+            center.setName(centerDTO.getName());
+            center.setAddress(centerDTO.getAddress());
+            center.setUpdateDate(Instant.now());
+            return ResponseEntity.ok(centerService.save(center));
         }
     }
 
@@ -70,6 +77,9 @@ public class CenterController {
         Center center = centerService.findById(centerId);
 
         fresher.setCenter(center);
+        Instant time = Instant.now();
+        fresher.setJoinDate(time);
+        fresher.setUpdateDate(time);
         fresherService.save(fresher);
         return ResponseEntity.ok(fresherService.save(fresher));
     }

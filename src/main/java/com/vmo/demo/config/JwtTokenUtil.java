@@ -17,8 +17,7 @@ public class JwtTokenUtil {
     // JWT_SECRET is secret, just server know
 
     @Value("${app.jwtSecret}")
-    private String JWT_SECRET;
-
+    private static String JWT_SECRET;
     public static final long JWT_TOKEN_DURATION = (long) 30 * 60 * 1000;   // 1 minute
 
     //generate token for user
@@ -60,13 +59,13 @@ public class JwtTokenUtil {
     }
 
     //check if the token has expired
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
     //validate token
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

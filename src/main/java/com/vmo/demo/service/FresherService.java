@@ -24,6 +24,8 @@ public interface FresherService {
 
     List<Fresher> findByEmail(String email, Pageable pageable);
 
+    Fresher findByEmail(String email);
+
     int countFresherByCenterId(Integer id);
 
     List<NumberOfFresherEachScoreRange> getNumberOfFresherEachScoreRange();

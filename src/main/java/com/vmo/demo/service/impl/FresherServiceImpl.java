@@ -20,6 +20,9 @@ public class FresherServiceImpl implements FresherService {
     private FresherRepository fresherRepository;
     private YourRepository yourRepository;
 
+    public FresherServiceImpl() {
+    }
+
     @Autowired
     public FresherServiceImpl(FresherRepository fresherRepository, YourRepository yourRepository) {
         this.fresherRepository = fresherRepository;
@@ -86,6 +89,12 @@ public class FresherServiceImpl implements FresherService {
     @Transactional
     public List<Fresher> findByEmail(String email, Pageable pageable) {
         return fresherRepository.findByEmail(email, pageable);
+    }
+
+    @Override
+    @Transactional
+    public Fresher findByEmail(String email) {
+        return fresherRepository.findByEmail(email);
     }
 
     @Override

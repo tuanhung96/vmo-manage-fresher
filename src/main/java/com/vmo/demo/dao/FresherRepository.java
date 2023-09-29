@@ -19,6 +19,9 @@ public interface FresherRepository extends JpaRepository<Fresher, Integer> {
     @Query(value = "select * from fresher where email ilike %?1%", nativeQuery = true)
     List<Fresher> findByEmail(String email, Pageable pageable);
 
+    @Query(value = "select * from fresher where email = ?1", nativeQuery = true)
+    Fresher findByEmail(String email);
+
     @Query(value = "select count(*) from fresher where center_id = ?1", nativeQuery = true)
     int countFresherByCenterId(Integer id);
 }

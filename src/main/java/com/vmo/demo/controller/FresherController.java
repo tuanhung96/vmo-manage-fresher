@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -54,8 +55,11 @@ public class FresherController {
 
     @PostMapping("/freshers")
     public ResponseEntity<Fresher> addFresher(@RequestBody FresherDTO fresherDTO) {
-        Fresher savedFresher = fresherService.save(fresherDTO.convertToFresher());
-        return ResponseEntity.ok(savedFresher);
+        Fresher fresher = fresherDTO.convertToFresher();
+        Instant time = Instant.now();
+        fresher.setCreateDate(time);
+        fresher.setUpdateDate(time);
+        return ResponseEntity.ok(fresherService.save(fresher));
     }
 
     @DeleteMapping("/freshers/{fresherId}")
@@ -73,11 +77,18 @@ public class FresherController {
     public ResponseEntity<Fresher> updateFresher(@PathVariable Integer fresherId,
                                            @RequestBody FresherDTO fresherDTO) {
 
-        Fresher foundFresher = fresherService.findById(fresherId);
-        if(foundFresher == null) {
+        Fresher fresher = fresherService.findById(fresherId);
+        if(fresher == null) {
             throw new FresherNotFoundException("Did not find fresher id - " + fresherId);
         } else {
-            return ResponseEntity.ok(fresherService.save(fresherDTO.convertToFresher()));
+            fresher.setName(fresherDTO.getName());
+            fresher.setEmail(fresherDTO.getEmail());
+            fresher.setProgrammingLanguage(fresherDTO.getProgrammingLanguage());
+            fresher.setScore1(fresherDTO.getScore1());
+            fresher.setScore2(fresherDTO.getScore2());
+            fresher.setScore3(fresherDTO.getScore3());
+            fresher.setUpdateDate(Instant.now());
+            return ResponseEntity.ok(fresherService.save(fresher));
         }
     }
 
@@ -87,6 +98,7 @@ public class FresherController {
         Float avgScore = calculateAverageScore(fresher);
         return ResponseEntity.ok(avgScore);
     }
+
     public Float calculateAverageScore(Fresher fresher) {
         return (fresher.getScore1()+fresher.getScore2()+fresher.getScore3())/3;
     }
@@ -130,37 +142,6 @@ public class FresherController {
         }
         return ResponseEntity.ok(result);
     }
-
-//    @GetMapping("/freshers/statisticFresherByScore")
-//    public ResponseEntity<List<NumberOfFresherByScore>> statisticFresherByScore() {
-//        List<Fresher> fresherList = fresherService.findAll();
-//
-//        int[] arr = new int[11];
-//        for (Fresher fresher: fresherList) {
-//            float avgScore = calculateAverageScore(fresher);
-//            switch ((int) avgScore) {
-//                case 10 -> arr[10]++;
-//                case 9 -> arr[9]++;
-//                case 8 -> arr[8]++;
-//                case 7 -> arr[7]++;
-//                case 6 -> arr[6]++;
-//                case 5 -> arr[5]++;
-//                case 4 -> arr[4]++;
-//                case 3 -> arr[3]++;
-//                case 2 -> arr[2]++;
-//                case 1 -> arr[1]++;
-//                case 0 -> arr[0]++;
-//            }
-//        }
-//
-//        List<NumberOfFresherByScore> result = new ArrayList<>();
-//        for (int i = 0; i < 11; i++) {
-//            if (i==10) result.add(new NumberOfFresherByScore(String.valueOf(i), arr[i]));
-//            else result.add(new NumberOfFresherByScore(i + " - <" + (i+1), arr[i]));
-//        }
-//
-//        return ResponseEntity.ok(result);
-//    }
 
     @GetMapping("/freshers/statisticFresherByScore")
     public ResponseEntity<List<NumberOfFresherEachScoreRange>> statisticFresherByScore() {

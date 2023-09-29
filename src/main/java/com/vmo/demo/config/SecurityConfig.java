@@ -9,12 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -55,29 +52,15 @@ public class SecurityConfig {
                         configurer
                                 .antMatchers("/authenticate").permitAll()
                                 .antMatchers("/refreshToken").permitAll()
+                                .antMatchers("/h2-console", "/favicon.ico").permitAll()
                                 .antMatchers("/swagger-ui", "/swagger-ui/**").permitAll()
                                 .antMatchers("/swagger-resources", "/swagger-resources/**").permitAll()
                                 .antMatchers("/v2/api-docs").permitAll()
-                                .antMatchers(HttpMethod.POST,"/centers").hasRole("ROLE_ADMIN")
-                                .antMatchers(HttpMethod.PUT,"/centers").hasRole("ROLE_ADMIN")
-                                .antMatchers(HttpMethod.DELETE,"/centers").hasRole("ROLE_ADMIN")
-                                .antMatchers(HttpMethod.POST,"/freshers").hasRole("ROLE_ADMIN")
-                                .antMatchers(HttpMethod.PUT,"/freshers").hasRole("ROLE_ADMIN")
-                                .antMatchers(HttpMethod.DELETE,"/freshers").hasRole("ROLE_ADMIN")
-//                                .requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
+                                .antMatchers(HttpMethod.DELETE,"/centers").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.DELETE,"/freshers").hasRole("ADMIN")
                                 .anyRequest().authenticated()
-                )
-                .sessionManagement(session ->
-                        session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                                .maximumSessions(1)
-                                .maxSessionsPreventsLogin(false)     // second login will cause the first to be invalidated
-                )
-                .exceptionHandling(exception ->
-                        exception
-                                .authenticationEntryPoint((request, response, e) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage())
-                        )
                 );
+
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

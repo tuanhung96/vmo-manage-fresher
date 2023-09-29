@@ -1,6 +1,7 @@
 package com.vmo.demo.config;
 
 import com.vmo.demo.exception.JwtExpiredException;
+import com.vmo.demo.exception.UnableToGetJWTException;
 import com.vmo.demo.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
-//                throw new UnableToGetJWTException("Unable to get JWT Token");
+                throw new UnableToGetJWTException("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 throw new JwtExpiredException("JWT Token has expired. Please get new access token by refresh token");
             }

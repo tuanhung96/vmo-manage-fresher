@@ -17,7 +17,7 @@ public class Fresher {
     private String name;
 
     @Pattern(regexp = "[A-Za-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}", message = "email is invalid")
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "programming_language")
@@ -66,18 +66,11 @@ public class Fresher {
         this.score3 = score3;
     }
 
-    public Fresher(String name, String email, String programmingLanguage, Float score1, Float score2, Float score3, Instant joinDate, Instant graduateDate, Instant createDate, Instant updateDate, Center center) {
-        this.name = name;
-        this.email = email;
-        this.programmingLanguage = programmingLanguage;
-        this.score1 = score1;
-        this.score2 = score2;
-        this.score3 = score3;
+    public void setDate(Instant joinDate, Instant graduateDate, Instant createDate, Instant updateDate) {
         this.joinDate = joinDate;
         this.graduateDate = graduateDate;
         this.createDate = createDate;
         this.updateDate = updateDate;
-        this.center = center;
     }
 
     public Integer getId() {
