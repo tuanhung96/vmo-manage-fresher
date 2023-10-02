@@ -1,5 +1,6 @@
 package com.vmo.demo.controller;
 
+import com.vmo.demo.dao.FresherRepositoryRedis;
 import com.vmo.demo.entity.Center;
 import com.vmo.demo.entity.Fresher;
 import com.vmo.demo.exception.FresherNotFoundException;
@@ -10,12 +11,19 @@ import com.vmo.demo.model.response.NumberOfFresherEachScoreRange;
 import com.vmo.demo.service.CenterService;
 import com.vmo.demo.service.FresherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -23,27 +31,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Validated
 public class FresherController {
     private FresherService fresherService;
     private CenterService centerService;
+    private FresherRepositoryRedis fresherRepositoryRedis;
 
     @Autowired
-    public FresherController(FresherService fresherService, CenterService centerService) {
+    public FresherController(FresherService fresherService, CenterService centerService, FresherRepositoryRedis fresherRepositoryRedis) {
         this.fresherService = fresherService;
         this.centerService = centerService;
+        this.fresherRepositoryRedis = fresherRepositoryRedis;
     }
 
     @GetMapping("/freshers")
-    public ResponseEntity<List<Fresher>> findAllFresher(@RequestParam Integer pageNumber,
-                                            @RequestParam Integer pageSize) {
+    public ResponseEntity<List<Fresher>> findAllFresher(@RequestParam @Min(1) Integer pageNumber,
+                                            @RequestParam @Min(1) Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Fresher> fresherList = fresherService.findAll(pageable);
         return ResponseEntity.ok(fresherList);
     }
 
     @GetMapping("/freshers/{fresherId}")
-    public ResponseEntity<Fresher> findFresherById(@PathVariable Integer fresherId) {
+//    @Cacheable(key = "#id", value = "Fresher")
+    public ResponseEntity<Fresher> findFresherById(@PathVariable @Min(1) Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
+//        fresherRepositoryRedis.saveFresher(fresher);
+//        System.out.println(fresherRepositoryRedis.findById(fresherId));
         return ResponseEntity.ok(fresher);
     }
 
@@ -63,7 +77,7 @@ public class FresherController {
     }
 
     @DeleteMapping("/freshers/{fresherId}")
-    public ResponseEntity<String> deleteFresher(@PathVariable Integer fresherId) {
+    public ResponseEntity<String> deleteFresher(@PathVariable @Min(1) Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
         if(fresher == null) {
             throw new FresherNotFoundException("Did not find fresher id - " + fresherId);
@@ -74,7 +88,7 @@ public class FresherController {
     }
 
     @PutMapping("/freshers/{fresherId}")
-    public ResponseEntity<Fresher> updateFresher(@PathVariable Integer fresherId,
+    public ResponseEntity<Fresher> updateFresher(@PathVariable @Min(1) Integer fresherId,
                                            @RequestBody FresherDTO fresherDTO) {
 
         Fresher fresher = fresherService.findById(fresherId);
@@ -93,7 +107,7 @@ public class FresherController {
     }
 
     @GetMapping("/freshers/{fresherId}/averageScore")
-    public ResponseEntity<Float> averageScore(@PathVariable Integer fresherId) {
+    public ResponseEntity<Float> averageScore(@PathVariable @Min(1) Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
         Float avgScore = calculateAverageScore(fresher);
         return ResponseEntity.ok(avgScore);
@@ -104,35 +118,36 @@ public class FresherController {
     }
 
     @GetMapping("/freshers/findByName")
-    public ResponseEntity<List<Fresher>> findByName(@RequestParam String name,
-                                        @RequestParam Integer pageNumber,
-                                        @RequestParam Integer pageSize) {
+    public ResponseEntity<List<Fresher>> findByName(@RequestParam @NotBlank String name,
+                                        @RequestParam @Min(1) Integer pageNumber,
+                                        @RequestParam @Min(1) Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Fresher> fresherList = fresherService.findByName(name, pageable);
         return ResponseEntity.ok(fresherList);
     }
 
     @GetMapping("/freshers/findByProgrammingLanguage")
-    public ResponseEntity<List<Fresher>> findByProgrammingLanguage(@RequestParam String programmingLanguage,
-                                        @RequestParam Integer pageNumber,
-                                        @RequestParam Integer pageSize) {
+    public ResponseEntity<List<Fresher>> findByProgrammingLanguage(@RequestParam @NotBlank @Size(max=10) String programmingLanguage,
+                                        @RequestParam @Min(1) Integer pageNumber,
+                                        @RequestParam @Min(1) Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Fresher> fresherList = fresherService.findByProgrammingLanguage(programmingLanguage, pageable);
         return ResponseEntity.ok(fresherList);
     }
 
     @GetMapping("/freshers/findByEmail")
-    public ResponseEntity<List<Fresher>> findByEmail(@RequestParam String email,
-                                                       @RequestParam Integer pageNumber,
-                                                       @RequestParam Integer pageSize) {
+    public ResponseEntity<List<Fresher>> findByEmail(@RequestParam @NotBlank
+                                                     @Pattern(regexp = "[A-Za-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}", message = "email is invalid") String email,
+                                                     @RequestParam @Min(1) Integer pageNumber,
+                                                     @RequestParam @Min(1) Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Fresher> fresherList = fresherService.findByEmail(email, pageable);
         return ResponseEntity.ok(fresherList);
     }
 
     @GetMapping("/freshers/statisticFresherByCenter")
-    public ResponseEntity<List<NumberOfFresherEachCenter>> statisticFresherByCenter(@RequestParam Integer pageNumber,
-                                                      @RequestParam Integer pageSize) {
+    public ResponseEntity<List<NumberOfFresherEachCenter>> statisticFresherByCenter(@RequestParam @Min(1) Integer pageNumber,
+                                                      @RequestParam @Min(1) Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Center> centers = centerService.findAll(pageable);
         List<NumberOfFresherEachCenter> result = new ArrayList<>();
@@ -151,7 +166,7 @@ public class FresherController {
     }
 
     @GetMapping("/freshers/{fresherId}/getJoinDateAndGraduateDate")
-    public ResponseEntity<JoinDateOfFresherWithLocalDateType> getJoinDateAndGraduateDate(@PathVariable Integer fresherId) {
+    public ResponseEntity<JoinDateOfFresherWithLocalDateType> getJoinDateAndGraduateDate(@PathVariable @Min(1) Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
         LocalDate joinDate = fresher.getJoinDate()
                                     .atZone(ZoneId.systemDefault())

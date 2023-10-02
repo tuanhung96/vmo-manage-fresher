@@ -9,9 +9,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -59,6 +62,17 @@ public class SecurityConfig {
                                 .antMatchers(HttpMethod.DELETE,"/centers").hasRole("ADMIN")
                                 .antMatchers(HttpMethod.DELETE,"/freshers").hasRole("ADMIN")
                                 .anyRequest().authenticated()
+                )
+                    .sessionManagement(session ->
+                        session
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                                .maximumSessions(1)
+                                .maxSessionsPreventsLogin(false)     // second login will cause the first to be invalidated
+                )
+                        .exceptionHandling(exception ->
+                        exception
+                                .authenticationEntryPoint((request, response, e) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,e.getMessage())
+                        )
                 );
 
 

@@ -1,6 +1,7 @@
 package com.vmo.demo.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity

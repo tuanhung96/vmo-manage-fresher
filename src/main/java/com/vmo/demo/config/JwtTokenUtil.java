@@ -17,8 +17,8 @@ public class JwtTokenUtil {
     // JWT_SECRET is secret, just server know
 
     @Value("${app.jwtSecret}")
-    private static String JWT_SECRET;
-    public static final long JWT_TOKEN_DURATION = (long) 30 * 60 * 1000;   // 1 minute
+    private String JWT_SECRET;
+    public static final long JWT_TOKEN_DURATION = (long) 30 * 60 * 1000;   // 30 minutes
 
     //generate token for user
     public String generateToken(UserDetails userDetails) {

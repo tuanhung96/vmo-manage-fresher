@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import java.time.Instant;
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class CenterController {
     }
 
     @GetMapping("/centers")
-    public ResponseEntity<List<Center>> findAllCenters(@RequestParam Integer pageNumber,
-                                            @RequestParam Integer pageSize) {
+    public ResponseEntity<List<Center>> findAllCenters(@RequestParam @Min(1) Integer pageNumber,
+                                            @RequestParam @Min(1) Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id"));
         List<Center> centerList = centerService.findAll(pageable);
         return ResponseEntity.ok(centerList);
@@ -45,7 +46,7 @@ public class CenterController {
     }
 
     @DeleteMapping("/centers/{centerId}")
-    public ResponseEntity<String> deleteCenter(@PathVariable Integer centerId) {
+    public ResponseEntity<String> deleteCenter(@PathVariable @Min(1) Integer centerId) {
         Center center = centerService.findById(centerId);
         if (center == null) {
             throw new CenterNotFoundException("Did not find center id - " + centerId);
@@ -56,7 +57,7 @@ public class CenterController {
     }
 
     @PutMapping("/centers/{centerId}")
-    public ResponseEntity<Center> updateCenter(@PathVariable Integer centerId,
+    public ResponseEntity<Center> updateCenter(@PathVariable @Min(1) Integer centerId,
                                           @RequestBody CenterDTO centerDTO) {
 
         Center center = centerService.findById(centerId);
@@ -71,8 +72,8 @@ public class CenterController {
     }
 
     @GetMapping("/centers/{centerId}/addFresher/{fresherId}")
-    public ResponseEntity<Fresher> addFresherIntoCenter(@PathVariable Integer centerId,
-                                                  @PathVariable Integer fresherId) {
+    public ResponseEntity<Fresher> addFresherIntoCenter(@PathVariable @Min(1) Integer centerId,
+                                                  @PathVariable @Min(1) Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
         Center center = centerService.findById(centerId);
 

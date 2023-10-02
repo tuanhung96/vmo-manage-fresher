@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/uploadFile")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile multipartFile)
+    public ResponseEntity<String> uploadFile(@RequestParam("file") @NotBlank MultipartFile multipartFile)
             throws IOException {
 
         String content = new String(multipartFile.getBytes(), StandardCharsets.UTF_8);

@@ -1,12 +1,17 @@
 package com.vmo.demo.entity;
 
+import org.springframework.data.redis.core.RedisHash;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
 @Table(name = "fresher")
-public class Fresher {
+public class Fresher implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

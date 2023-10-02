@@ -43,7 +43,6 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
-
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         final UserDetails userDetails = userService
@@ -79,7 +78,7 @@ public class AuthenticationController {
         if(refreshTokenService.verifyExpiration(refreshToken)) {
             User user = refreshToken.getUser();
             String token = jwtTokenUtil.generateToken(new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                            Arrays.asList(new SimpleGrantedAuthority("NO_ROLE"))));
+                            Arrays.asList(new SimpleGrantedAuthority(user.getRole().getName()))));
             return ResponseEntity.ok(new AuthenticationResponse(token, requestRefreshToken));
         } else {
             throw new TokenRefreshException("Refresh token was expired. Please make a new sign in request");
