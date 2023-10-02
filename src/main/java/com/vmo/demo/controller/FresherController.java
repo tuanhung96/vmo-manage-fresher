@@ -53,12 +53,15 @@ public class FresherController {
     }
 
     @GetMapping("/freshers/{fresherId}")
-//    @Cacheable(key = "#id", value = "Fresher")
     public ResponseEntity<Fresher> findFresherById(@PathVariable @Min(1) Integer fresherId) {
         Fresher fresher = fresherService.findById(fresherId);
-//        fresherRepositoryRedis.saveFresher(fresher);
-//        System.out.println(fresherRepositoryRedis.findById(fresherId));
+        fresherRepositoryRedis.saveFresher(fresher);
         return ResponseEntity.ok(fresher);
+    }
+
+    @GetMapping("/hello")
+    public List<Fresher> hello() {
+        return fresherRepositoryRedis.findAll();
     }
 
     @GetMapping("/freshers/count")

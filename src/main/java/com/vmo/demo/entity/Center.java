@@ -6,7 +6,9 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "center")
-public class Center {
+public class Center implements Serializable  {
+    private static final long serialVersionUID = 2L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
