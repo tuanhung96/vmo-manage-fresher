@@ -1,7 +1,6 @@
 package com.vmo.demo.controller;
 
 import com.vmo.demo.dao.FresherRepository;
-import com.vmo.demo.entity.Fresher;
 import com.vmo.demo.service.FresherService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

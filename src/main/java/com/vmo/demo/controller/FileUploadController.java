@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,13 +29,14 @@ public class FileUploadController {
     public ResponseEntity<String> uploadFile(@RequestParam("file") @NotBlank MultipartFile multipartFile)
             throws IOException {
 
+        Instant time = Instant.now();
         String content = new String(multipartFile.getBytes(), StandardCharsets.UTF_8);
         List<Center> centerList = Arrays.stream(content.split("\n"))
                                         .map(line -> {
                                             String[] data = line.split(",");
                                             String name = data[0];
                                             String address = data[1];
-                                            return new Center(name, address);
+                                            return new Center(name, address, time, time);
                                         }).toList();
 
         centerService.saveAll(centerList);

@@ -1,7 +1,5 @@
 package com.vmo.demo.entity;
 
-import org.springframework.data.redis.core.RedisHash;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -172,5 +170,23 @@ public class Fresher implements Serializable {
 
     public void setCenter(Center center) {
         this.center = center;
+    }
+
+    @Override
+    public String toString() {
+        return "Fresher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", programmingLanguage='" + programmingLanguage + '\'' +
+                ", score1=" + score1 +
+                ", score2=" + score2 +
+                ", score3=" + score3 +
+                ", joinDate=" + joinDate +
+                ", graduateDate=" + graduateDate +
+                ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
+                ", center=" + center +
+                '}';
     }
 }

@@ -61,4 +61,16 @@ public class FresherDTO {
     public Fresher convertToFresher() {
         return new Fresher(name, email, programmingLanguage, score1, score2, score3);
     }
+
+    @Override
+    public String toString() {
+        return "FresherDTO{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", programmingLanguage='" + programmingLanguage + '\'' +
+                ", score1=" + score1 +
+                ", score2=" + score2 +
+                ", score3=" + score3 +
+                '}';
+    }
 }

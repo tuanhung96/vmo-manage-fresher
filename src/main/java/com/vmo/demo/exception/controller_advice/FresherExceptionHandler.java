@@ -1,5 +1,6 @@
 package com.vmo.demo.exception.controller_advice;
 
+import com.vmo.demo.exception.ExistedFresherException;
 import com.vmo.demo.exception.FresherNotFoundException;
 import com.vmo.demo.model.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,15 @@ public class FresherExceptionHandler {
         error.setMessage(exception.getMessage());
         error.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleException (ExistedFresherException exception) {
+        ExceptionResponse error = new ExceptionResponse();
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(exception.getMessage());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }

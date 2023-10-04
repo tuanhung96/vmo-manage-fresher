@@ -1,6 +1,7 @@
 package com.vmo.demo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -14,9 +15,11 @@ public class Center implements Serializable  {
     @Column(name = "id")
     private Integer id;
 
+    @NotBlank(message = "name must not be blank")
     @Column(name = "name")
     private String name;
 
+    @NotBlank(message = "address must not be blank")
     @Column(name = "address")
     private String address;
 

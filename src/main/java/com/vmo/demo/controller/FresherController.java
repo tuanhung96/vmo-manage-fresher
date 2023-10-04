@@ -3,6 +3,7 @@ package com.vmo.demo.controller;
 import com.vmo.demo.dao.FresherRepositoryRedis;
 import com.vmo.demo.entity.Center;
 import com.vmo.demo.entity.Fresher;
+import com.vmo.demo.exception.ExistedFresherException;
 import com.vmo.demo.exception.FresherNotFoundException;
 import com.vmo.demo.model.dto.FresherDTO;
 import com.vmo.demo.model.response.JoinDateOfFresherWithLocalDateType;
@@ -11,8 +12,6 @@ import com.vmo.demo.model.response.NumberOfFresherEachScoreRange;
 import com.vmo.demo.service.CenterService;
 import com.vmo.demo.service.FresherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -72,17 +71,20 @@ public class FresherController {
 
     @PostMapping("/freshers")
     public ResponseEntity<Fresher> addFresher(@RequestBody FresherDTO fresherDTO) {
-        Fresher fresher = fresherDTO.convertToFresher();
-        Instant time = Instant.now();
-        fresher.setCreateDate(time);
-        fresher.setUpdateDate(time);
-        return ResponseEntity.ok(fresherService.save(fresher));
+        if (fresherService.findByEmail(fresherDTO.getEmail()) != null) {
+            throw new ExistedFresherException("Email " + fresherDTO.getEmail() + " existed");
+        } else {
+            Fresher fresher = fresherDTO.convertToFresher();
+            Instant time = Instant.now();
+            fresher.setCreateDate(time);
+            fresher.setUpdateDate(time);
+            return ResponseEntity.ok(fresherService.save(fresher));
+        }
     }
 
     @DeleteMapping("/freshers/{fresherId}")
     public ResponseEntity<String> deleteFresher(@PathVariable @Min(1) Integer fresherId) {
-        Fresher fresher = fresherService.findById(fresherId);
-        if(fresher == null) {
+        if (fresherService.findById(fresherId) == null) {
             throw new FresherNotFoundException("Did not find fresher id - " + fresherId);
         } else {
             fresherService.deleteById(fresherId);
@@ -95,8 +97,10 @@ public class FresherController {
                                            @RequestBody FresherDTO fresherDTO) {
 
         Fresher fresher = fresherService.findById(fresherId);
-        if(fresher == null) {
+        if (fresher == null) {
             throw new FresherNotFoundException("Did not find fresher id - " + fresherId);
+        } else if (fresherService.findByEmail(fresherDTO.getEmail()) != null){
+            throw new ExistedFresherException("Email " + fresherDTO.getEmail() + " existed");
         } else {
             fresher.setName(fresherDTO.getName());
             fresher.setEmail(fresherDTO.getEmail());
